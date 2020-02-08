@@ -43,6 +43,58 @@ import sys
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
+
+
+def build_dictionary(filename):
+    punctuation = r'!"#$%&\'()*+, -./:<= >?@[\\] ^ _`{ \| }~'
+    dictionary = {}
+    # file = open(filename, 'rt')
+    text = open(filename, 'r')
+    for line in text:
+        # print line,
+        for word in line.lower().split(" "):
+            word = word.strip()
+            # We'll be parsing Alice in Wonderland...
+            # I expect things to get a little hairy!
+            for symbol in punctuation:
+                if word.endswith(symbol):
+                    word = word[:-1]
+                if word.startswith(symbol):
+                    word = word[1:]
+            if len(word) == 0:
+                continue
+            if word not in dictionary:
+                dictionary[word] = 1
+            else:
+                dictionary[word] += 1
+    text.close()
+    # print(sample_text.lower().split(" "))
+    # print(sample_text)
+
+    return dictionary
+
+
+def print_words(filename):
+    dictionary = build_dictionary(filename)
+
+    for counted_word in sorted(dictionary):
+        # print ("word:" + str(dictionary[counted_word]) +
+        #        " => " + str(counted_word[1]))
+        print counted_word
+    print(dictionary)
+    return
+
+
+def print_top(filename):
+    dictionary = build_dictionary(filename)
+    if len(dictionary) < 20:
+        for counted_word in sorted(dictionary.keys(), key=values):
+            print ("word:" + word + " => " + str(dictionary[word]))
+    else:
+        for word in sorted(dictionary.keys(), key=values):
+            print ("word:" + word + " => " + str(dictionary[word]))
+    return
+
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
@@ -54,6 +106,9 @@ import sys
 
 
 def main():
+    if sys.version_info[0] >= 3:
+        raise Exception("This program requires python2 interpreter")
+
     if len(sys.argv) != 3:
         print 'usage: python wordcount.py {--count | --topcount} file'
         sys.exit(1)
