@@ -41,19 +41,64 @@ print_words() and print_top().
 
 import sys
 
-# +++your code here+++
-# Define print_words(filename) and print_top(filename) functions.
-# You could write a helper utility function that reads a file
-# and builds and returns a word/count dict for it.
-# Then print_words() and print_top() can just call the utility function.
 
-###
+def build_dictionary(filename):
+    # Saving this punctuation work in case we're further
+    # modifying this file in the next few assessments.
+    # Feel free to delete commented out code below.
+
+    # punctuation = r'!"#$%&\'()*+, -./:<= >?@[\\] ^ _`{ \| }~'
+    dictionary = {}
+
+    text = open(filename, 'r')
+
+    for line in text:
+        for word in line.lower().split():
+            # for symbol in punctuation:
+            #     if word.endswith(symbol):
+            #         word = word[:-1]
+            #     if word.startswith(symbol):
+            #         word = word[1:]
+            if len(word) == 0:
+                continue
+            if word not in dictionary:
+                dictionary[word] = 1
+            else:
+                dictionary[word] += 1
+    text.close()
+
+    return dictionary
+
+
+def print_words(filename):
+    dictionary = build_dictionary(filename)
+
+    for word_tuple in sorted(dictionary.items()):
+        print '{} {}'.format(word_tuple[0], word_tuple[1])
+
+    return
+
+
+def print_top(filename):
+    dictionary = build_dictionary(filename)
+
+    if len(dictionary) < 20:
+        for word_tuple in sorted(dictionary.items(), key=lambda x: x[1], reverse=True):
+            print '{} {}'.format(word_tuple[0], word_tuple[1])
+    else:
+        for word_tuple in sorted(dictionary.items(), key=lambda x: x[1], reverse=True)[0:20]:
+            print '{} {}'.format(word_tuple[0], word_tuple[1])
+    return
+
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
 
 
 def main():
+    if sys.version_info[0] >= 3:
+        raise Exception("This program requires python2 interpreter")
+
     if len(sys.argv) != 3:
         print 'usage: python wordcount.py {--count | --topcount} file'
         sys.exit(1)
