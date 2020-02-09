@@ -41,26 +41,24 @@ print_words() and print_top().
 
 import sys
 
-# +++your code here+++
-# Define print_words(filename) and print_top(filename) functions.
-
 
 def build_dictionary(filename):
-    punctuation = r'!"#$%&\'()*+, -./:<= >?@[\\] ^ _`{ \| }~'
+    # Saving this punctuation work in case we're further
+    # modifying this file in the next few assessments.
+    # Feel free to delete commented out code below.
+
+    # punctuation = r'!"#$%&\'()*+, -./:<= >?@[\\] ^ _`{ \| }~'
     dictionary = {}
-    # file = open(filename, 'rt')
+
     text = open(filename, 'r')
+
     for line in text:
-        # print line,
-        for word in line.lower().split(" "):
-            word = word.strip()
-            # We'll be parsing Alice in Wonderland...
-            # I expect things to get a little hairy!
-            for symbol in punctuation:
-                if word.endswith(symbol):
-                    word = word[:-1]
-                if word.startswith(symbol):
-                    word = word[1:]
+        for word in line.lower().split():
+            # for symbol in punctuation:
+            #     if word.endswith(symbol):
+            #         word = word[:-1]
+            #     if word.startswith(symbol):
+            #         word = word[1:]
             if len(word) == 0:
                 continue
             if word not in dictionary:
@@ -68,8 +66,6 @@ def build_dictionary(filename):
             else:
                 dictionary[word] += 1
     text.close()
-    # print(sample_text.lower().split(" "))
-    # print(sample_text)
 
     return dictionary
 
@@ -77,29 +73,23 @@ def build_dictionary(filename):
 def print_words(filename):
     dictionary = build_dictionary(filename)
 
-    for counted_word in sorted(dictionary):
-        # print ("word:" + str(dictionary[counted_word]) +
-        #        " => " + str(counted_word[1]))
-        print counted_word
-    print(dictionary)
+    for word_tuple in sorted(dictionary.items()):
+        print '{} {}'.format(word_tuple[0], word_tuple[1])
+
     return
 
 
 def print_top(filename):
     dictionary = build_dictionary(filename)
+
     if len(dictionary) < 20:
-        for counted_word in sorted(dictionary.keys(), key=values):
-            print ("word:" + word + " => " + str(dictionary[word]))
+        for word_tuple in sorted(dictionary.items(), key=lambda x: x[1], reverse=True):
+            print '{} {}'.format(word_tuple[0], word_tuple[1])
     else:
-        for word in sorted(dictionary.keys(), key=values):
-            print ("word:" + word + " => " + str(dictionary[word]))
+        for word_tuple in sorted(dictionary.items(), key=lambda x: x[1], reverse=True)[0:20]:
+            print '{} {}'.format(word_tuple[0], word_tuple[1])
     return
 
-# You could write a helper utility function that reads a file
-# and builds and returns a word/count dict for it.
-# Then print_words() and print_top() can just call the utility function.
-
-###
 
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
